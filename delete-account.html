@@ -313,7 +313,7 @@
       </footer>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.min.js"></script>
     <script>
       // Public client credentials (same as the app). Injected from .env via
       // scripts/inject-privacy-supabase.ps1 — or paste manually before deploy.
@@ -375,7 +375,7 @@
         setStatus(signinStatus, 'Signing in…')
         signinBtn.disabled = true
 
-        const email = document.getElementById('email').value.trim()
+        const email = document.getElementById('email').value.trim().toLowerCase()
         const password = document.getElementById('password').value
 
         const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -386,7 +386,15 @@
         signinBtn.disabled = false
 
         if (error) {
-          setStatus(signinStatus, error.message, 'error')
+          let msg = error.message
+          if (/invalid login credentials/i.test(msg)) {
+            msg =
+              'Invalid email or password. Use the same credentials as in the VERIN app (check for typos / caps lock).'
+          } else if (/email not confirmed/i.test(msg)) {
+            msg =
+              'Email not confirmed yet. Open the confirmation link from your inbox, then try again.'
+          }
+          setStatus(signinStatus, msg, 'error')
           return
         }
 
