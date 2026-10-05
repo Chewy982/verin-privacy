@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Delete account – VERIN</title>
+    <meta
+      name="description"
+      content="Delete your VERIN account and associated data."
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #111111;
+        --surface: #1a1a1a;
+        --text: #f0f0f0;
+        --muted: #888888;
+        --border: rgba(255, 255, 255, 0.08);
+        --danger: #c85555;
+        --danger-bg: rgba(200, 85, 85, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      main {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 48px 24px 80px;
+      }
+
+      .brand {
+        font-size: 12px;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        letter-spacing: -0.03em;
+        margin: 0 0 8px;
+        line-height: 1.2;
+      }
+
+      .meta {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-bottom: 28px;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px 18px;
+        margin: 0 0 20px;
+      }
+
+      .warn {
+        background: var(--danger-bg);
+        border-color: rgba(200, 85, 85, 0.35);
+      }
+
+      p {
+        color: rgba(240, 240, 240, 0.92);
+        margin: 0 0 12px;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      ul {
+        padding-left: 1.2rem;
+        margin: 8px 0 0;
+      }
+
+      li {
+        margin-bottom: 0.35rem;
+        color: rgba(240, 240, 240, 0.92);
+      }
+
+      a {
+        color: #fff;
+      }
+
+      label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin: 0 0 6px;
+      }
+
+      input[type='email'],
+      input[type='password'] {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        padding: 12px 14px;
+        font-size: 1rem;
+        margin-bottom: 14px;
+      }
+
+      input:focus {
+        outline: 1px solid rgba(255, 255, 255, 0.35);
+      }
+
+      .check-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin: 4px 0 18px;
+      }
+
+      .check-row input {
+        margin-top: 4px;
+      }
+
+      .check-row label {
+        margin: 0;
+        color: rgba(240, 240, 240, 0.92);
+        font-size: 0.95rem;
+        cursor: pointer;
+      }
+
+      button {
+        width: 100%;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 16px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        background: #fff;
+        color: #111;
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: #fff;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        margin-top: 10px;
+        font-weight: 500;
+      }
+
+      .status {
+        margin-top: 14px;
+        font-size: 0.9rem;
+        color: var(--muted);
+        min-height: 1.3em;
+      }
+
+      .status.error {
+        color: #e07a7a;
+      }
+
+      .status.ok {
+        color: #5aaf6e;
+      }
+
+      .nav {
+        margin-bottom: 28px;
+        font-size: 0.9rem;
+      }
+
+      .nav a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .nav a:hover {
+        color: #fff;
+      }
+
+      footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .signed-as {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="nav">
+        <a href="./data-protection-policy.html">← Data protection policy</a>
+      </p>
+
+      <div class="brand">VERIN</div>
+      <h1>Delete account</h1>
+      <p class="meta">
+        Permanently delete your VERIN account and synced data.
+      </p>
+
+      <div class="card warn">
+        <p>
+          This cannot be undone. Deleting your account removes:
+        </p>
+        <ul>
+          <li>Your sign-in (email / password)</li>
+          <li>Synced commitments, check-ins, and score history</li>
+        </ul>
+        <p style="margin-top: 12px">
+          Data stored only on a device is not removed by this page — uninstall
+          the app or clear app data on that device if needed.
+        </p>
+      </div>
+
+      <div id="panel-signin" class="card">
+        <p style="margin-bottom: 16px">
+          Sign in with the same email and password you use in the VERIN app.
+        </p>
+        <form id="signin-form">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="username"
+            required
+          />
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          />
+          <button class="btn-primary" type="submit" id="signin-btn">
+            Continue
+          </button>
+          <p class="status" id="signin-status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div id="panel-confirm" class="card hidden">
+        <p class="signed-as">
+          Signed in as <strong id="signed-email"></strong>
+        </p>
+        <form id="delete-form">
+          <div class="check-row">
+            <input id="confirm" type="checkbox" required />
+            <label for="confirm">
+              I understand this permanently deletes my VERIN account and synced
+              data.
+            </label>
+          </div>
+          <button class="btn-danger" type="submit" id="delete-btn" disabled>
+            Delete my account
+          </button>
+          <button class="btn-ghost" type="button" id="cancel-btn">
+            Cancel / sign out
+          </button>
+          <p class="status" id="delete-status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div id="panel-done" class="card hidden">
+        <p class="status ok" style="min-height: 0; margin: 0">
+          Your account has been deleted. You can close this page.
+        </p>
+      </div>
+
+      <footer>
+        Questions:
+        <a href="mailto:nils.pachaly@gmail.com">nils.pachaly@gmail.com</a>
+        ·
+        <a href="./data-protection-policy.html">Data protection policy</a>
+      </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
+    <script>
+      // Public client credentials (same as the app). Injected from .env via
+      // scripts/inject-privacy-supabase.ps1 — or paste manually before deploy.
+      const SUPABASE_URL = 'https://nirhppkwgsyhbmruvhpm.supabase.co'
+      const SUPABASE_ANON_KEY = 'sb_publishable_x7PcvkFtmc5ewMDj6yVq4Q_maQnz1Ut'
+
+      const panelSignin = document.getElementById('panel-signin')
+      const panelConfirm = document.getElementById('panel-confirm')
+      const panelDone = document.getElementById('panel-done')
+      const signinStatus = document.getElementById('signin-status')
+      const deleteStatus = document.getElementById('delete-status')
+      const signedEmail = document.getElementById('signed-email')
+      const confirmBox = document.getElementById('confirm')
+      const deleteBtn = document.getElementById('delete-btn')
+      const signinBtn = document.getElementById('signin-btn')
+
+      function setStatus(el, message, kind) {
+        el.textContent = message || ''
+        el.classList.remove('error', 'ok')
+        if (kind) el.classList.add(kind)
+      }
+
+      function configReady() {
+        return (
+          SUPABASE_URL &&
+          !SUPABASE_URL.includes('__VERIN_') &&
+          SUPABASE_ANON_KEY &&
+          !SUPABASE_ANON_KEY.includes('__VERIN_')
+        )
+      }
+
+      if (!configReady()) {
+        setStatus(
+          signinStatus,
+          'This page is not configured yet. Run scripts/inject-privacy-supabase.ps1 or set SUPABASE_URL / SUPABASE_ANON_KEY in this file.',
+          'error',
+        )
+        signinBtn.disabled = true
+      }
+
+      const supabaseClient = configReady()
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false,
+              detectSessionInUrl: false,
+            },
+          })
+        : null
+
+      confirmBox.addEventListener('change', () => {
+        deleteBtn.disabled = !confirmBox.checked
+      })
+
+      document.getElementById('signin-form').addEventListener('submit', async (e) => {
+        e.preventDefault()
+        if (!supabaseClient) return
+
+        setStatus(signinStatus, 'Signing in…')
+        signinBtn.disabled = true
+
+        const email = document.getElementById('email').value.trim()
+        const password = document.getElementById('password').value
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password,
+        })
+
+        signinBtn.disabled = false
+
+        if (error) {
+          setStatus(signinStatus, error.message, 'error')
+          return
+        }
+
+        signedEmail.textContent = data.user?.email || email
+        panelSignin.classList.add('hidden')
+        panelConfirm.classList.remove('hidden')
+        setStatus(signinStatus, '')
+      })
+
+      document.getElementById('cancel-btn').addEventListener('click', async () => {
+        if (supabaseClient) await supabaseClient.auth.signOut()
+        confirmBox.checked = false
+        deleteBtn.disabled = true
+        document.getElementById('password').value = ''
+        panelConfirm.classList.add('hidden')
+        panelSignin.classList.remove('hidden')
+        setStatus(deleteStatus, '')
+      })
+
+      document.getElementById('delete-form').addEventListener('submit', async (e) => {
+        e.preventDefault()
+        if (!supabaseClient || !confirmBox.checked) return
+
+        setStatus(deleteStatus, 'Deleting account…')
+        deleteBtn.disabled = true
+
+        const { error } = await supabaseClient.rpc('delete_own_account')
+
+        if (error) {
+          setStatus(deleteStatus, error.message, 'error')
+          deleteBtn.disabled = !confirmBox.checked
+          return
+        }
+
+        await supabaseClient.auth.signOut()
+        panelConfirm.classList.add('hidden')
+        panelDone.classList.remove('hidden')
+      })
+    </script>
+  </body>
+</html>
