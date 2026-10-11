@@ -313,12 +313,10 @@
       </footer>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.min.js"></script>
     <script>
-      // Public client credentials (same as the app). Injected from .env via
-      // scripts/inject-privacy-supabase.ps1 — or paste manually before deploy.
-      const SUPABASE_URL = 'https://nirhppkwgsyhbmruvhpm.supabase.co'
-      const SUPABASE_ANON_KEY = 'sb_publishable_x7PcvkFtmc5ewMDj6yVq4Q_maQnz1Ut'
+      // Worker origin. Injected from .env via scripts/inject-privacy-supabase.ps1.
+      const API_URL = 'https://verin.nils-pachaly.workers.dev'
+      let sessionToken = ''
 
       const panelSignin = document.getElementById('panel-signin')
       const panelConfirm = document.getElementById('panel-confirm')
@@ -337,32 +335,21 @@
       }
 
       function configReady() {
-        return (
-          SUPABASE_URL &&
-          !SUPABASE_URL.includes('__VERIN_') &&
-          SUPABASE_ANON_KEY &&
-          !SUPABASE_ANON_KEY.includes('__VERIN_')
-        )
+        return API_URL && !API_URL.includes('__VERIN_')
+      }
+
+      function authHeaders() {
+        return sessionToken ? { Authorization: 'Bearer ' + sessionToken } : {}
       }
 
       if (!configReady()) {
         setStatus(
           signinStatus,
-          'This page is not configured yet. Run scripts/inject-privacy-supabase.ps1 or set SUPABASE_URL / SUPABASE_ANON_KEY in this file.',
+          'This page is not configured yet. Run scripts/inject-privacy-supabase.ps1 or set API_URL in this file.',
           'error',
         )
         signinBtn.disabled = true
       }
-
-      const supabaseClient = configReady()
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-              persistSession: false,
-              autoRefreshToken: false,
-              detectSessionInUrl: false,
-            },
-          })
-        : null
 
       confirmBox.addEventListener('change', () => {
         deleteBtn.disabled = !confirmBox.checked
@@ -370,7 +357,7 @@
 
       document.getElementById('signin-form').addEventListener('submit', async (e) => {
         e.preventDefault()
-        if (!supabaseClient) return
+        if (!configReady()) return
 
         setStatus(signinStatus, 'Signing in…')
         signinBtn.disabled = true
@@ -378,34 +365,50 @@
         const email = document.getElementById('email').value.trim().toLowerCase()
         const password = document.getElementById('password').value
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email,
-          password,
-        })
+        let response
+        try {
+          response = await fetch(API_URL + '/api/auth/sign-in/email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          })
+        } catch {
+          signinBtn.disabled = false
+          setStatus(signinStatus, 'Could not reach VERIN. Try again in a moment.', 'error')
+          return
+        }
 
+        const body = await response.json().catch(() => ({}))
         signinBtn.disabled = false
 
-        if (error) {
-          let msg = error.message
-          if (/invalid login credentials/i.test(msg)) {
-            msg =
-              'Invalid email or password. Use the same credentials as in the VERIN app (check for typos / caps lock).'
-          } else if (/email not confirmed/i.test(msg)) {
-            msg =
-              'Email not confirmed yet. Open the confirmation link from your inbox, then try again.'
-          }
+        if (!response.ok) {
+          const msg = /invalid/i.test(body.message || '')
+            ? 'Invalid email or password. Use the same credentials as in the VERIN app (check for typos / caps lock).'
+            : body.message || 'Sign-in failed.'
           setStatus(signinStatus, msg, 'error')
           return
         }
 
-        signedEmail.textContent = data.user?.email || email
+        sessionToken = response.headers.get('set-auth-token') || ''
+        if (!sessionToken) {
+          setStatus(signinStatus, 'Sign-in did not return a session. Try again.', 'error')
+          return
+        }
+
+        signedEmail.textContent = body.user?.email || email
         panelSignin.classList.add('hidden')
         panelConfirm.classList.remove('hidden')
         setStatus(signinStatus, '')
       })
 
       document.getElementById('cancel-btn').addEventListener('click', async () => {
-        if (supabaseClient) await supabaseClient.auth.signOut()
+        if (sessionToken) {
+          await fetch(API_URL + '/api/auth/sign-out', {
+            method: 'POST',
+            headers: authHeaders(),
+          }).catch(() => {})
+        }
+        sessionToken = ''
         confirmBox.checked = false
         deleteBtn.disabled = true
         document.getElementById('password').value = ''
@@ -416,20 +419,31 @@
 
       document.getElementById('delete-form').addEventListener('submit', async (e) => {
         e.preventDefault()
-        if (!supabaseClient || !confirmBox.checked) return
+        if (!sessionToken || !confirmBox.checked) return
 
         setStatus(deleteStatus, 'Deleting account…')
         deleteBtn.disabled = true
 
-        const { error } = await supabaseClient.rpc('delete_own_account')
-
-        if (error) {
-          setStatus(deleteStatus, error.message, 'error')
+        let response
+        try {
+          response = await fetch(API_URL + '/api/account', {
+            method: 'DELETE',
+            headers: authHeaders(),
+          })
+        } catch {
+          setStatus(deleteStatus, 'Could not reach VERIN. Try again in a moment.', 'error')
           deleteBtn.disabled = !confirmBox.checked
           return
         }
 
-        await supabaseClient.auth.signOut()
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}))
+          setStatus(deleteStatus, body.error || 'Could not delete the account.', 'error')
+          deleteBtn.disabled = !confirmBox.checked
+          return
+        }
+
+        sessionToken = ''
         panelConfirm.classList.add('hidden')
         panelDone.classList.remove('hidden')
       })
